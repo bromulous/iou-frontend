@@ -1,25 +1,80 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import NavBar from "./components/NavBar";
+import LandingPage from "./components/LandingPage";
+import BrowseBonds from "./components/BrowseBonds";
+import Users from "./components/Users";
+import IssueBond from "./components/IssueBond";
+import BondIssuanceFlow from "./components/IssueBondV2";
+import About from "./components/About";
+import Profile from "./components/Profile";
 
-function App() {
+const Layout = ({ children }) => {
+  const location = useLocation();
+  const hideNavBar = location.pathname === "/";
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {!hideNavBar && <NavBar />}
+      {children}
+    </>
   );
-}
+};
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/home"
+          element={
+            <Layout>
+              <LandingPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/browse-bonds"
+          element={
+            <Layout>
+              <BrowseBonds />
+            </Layout>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <Layout>
+              <Users />
+            </Layout>
+          }
+        />
+        <Route
+          path="/issue-bond"
+          element={
+            <Layout>
+              {/* <IssueBond /> */}
+              <BondIssuanceFlow />
+            </Layout>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <Layout>
+              <About />
+            </Layout>
+          }
+        />
+        <Route path="/profile/:userId" element={<Layout><Profile /></Layout>} />
+      </Routes>
+    </Router>
+  );
+};
 
 export default App;
