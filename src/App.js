@@ -10,7 +10,7 @@ import LandingPage from "./components/LandingPage";
 import BrowseBonds from "./components/BrowseBonds";
 import Users from "./components/Users";
 import IssueBond from "./components/IssueBond";
-import BondIssuanceFlow from "./components/IssueBondV2";
+import BondIssuanceFlow from "./components/BondIssuanceFlow";
 import About from "./components/About";
 import Profile from "./components/Profile";
 
