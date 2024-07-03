@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import BondCardV2 from "./BondCardV2";
 
 const Profile = () => {
   const { userId } = useParams();
@@ -206,30 +207,7 @@ const Profile = () => {
         <Grid container spacing={2}>
           {user.bonds_created.map((bond) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={bond.id}>
-              <Card>
-                <CardContent>
-                  <Box display="flex" justifyContent="space-between">
-                    <Box>
-                      <Typography variant="h6">{bond.title}</Typography>
-                      <Typography variant="body2">
-                        Bond Value: {bond.tokenAmount}
-                      </Typography>
-                      <Typography variant="body2">APR: {bond.apr}</Typography>
-                      <Typography variant="body2">
-                        Project Info: {bond.projectInfo}
-                      </Typography>
-                    </Box>
-                    {bond.imageUrl && (
-                      <Box
-                        component="img"
-                        src={bond.imageUrl}
-                        alt={bond.title}
-                        sx={{ width: 50, height: 50 }}
-                      />
-                    )}
-                  </Box>
-                </CardContent>
-              </Card>
+              <BondCardV2 bond={bond} />
             </Grid>
           ))}
           <Grid item xs={12} sm={6} md={4} lg={3}>
