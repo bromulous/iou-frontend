@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Grid, TextField, Button, Typography, MenuItem, FormControlLabel, Checkbox } from "@mui/material";
 
 const RepaymentDetailsStep = ({ bondRepayment, setBondRepayment, handleAddPaymentSchedule, handleRemovePaymentSchedule, handlePaymentScheduleChange, handleSaveDraft }) => {
-  const [showPenaltyField, setShowPenaltyField] = useState(false);
+  const [showPenaltyField, setShowPenaltyField] = useState(bondRepayment.latePenalty > 0);
 
   const handleTogglePenalty = () => {
     setShowPenaltyField(!showPenaltyField);

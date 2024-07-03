@@ -70,10 +70,9 @@ const BondIssuanceFlow = () => {
     setActiveStep(index);
   };
 
-  const handleSaveDraft = async (show_alert=true) => {
-    let res;
+  const getRequestArgs = () => {
     if  ( bondDetails.tokens <= 0) {
-        bondDetails.tokenPrice = 0
+      bondDetails.tokenPrice = 0
     } else {
         bondDetails.tokenPrice = bondDetails.totalAmount / bondDetails.tokens
     }
@@ -85,8 +84,14 @@ const BondIssuanceFlow = () => {
       bond_repayment: bondRepayment,
     };
     if (draftId !== null) {
-      draft.draft_id =draftId;
+      draft.draft_id = draftId;
     }
+    return draft;
+  }
+
+  const handleSaveDraft = async (show_alert=true) => {
+    let res;
+    const draft = getRequestArgs();
     try {
       res = await backend.post(`/users/${currentUserId}/save_draft`, draft);
       setDraftId(res.data.draft_id);
@@ -105,19 +110,9 @@ const BondIssuanceFlow = () => {
   }
 
   const handlePublishBond = async () => {
-    let response;
-
-    response = await handleSaveDraft(false);
-    if ( response.status !== 200) {
-      alert("Error saving draft");
-      return;
-    };
-    const data = {
-        user_id: currentUserId,
-        draft_id: response.data.draft_id,
-      };
+    const draft = getRequestArgs();
     try {
-      await backend.post(`/users/${currentUserId}/issue_bond`, data);
+      await backend.post(`/users/${currentUserId}/issue_bond`, draft);
       alert("Bond published!");
       navigate(`/profile/${currentUserId}`);
 
