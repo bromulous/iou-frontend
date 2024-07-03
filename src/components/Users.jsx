@@ -199,11 +199,11 @@ const Users = () => {
       </Typography>
       <Grid container spacing={3}>
         {tokens.map((token) => (
-          <Grid item xs={12} sm={6} md={4} key={token.id}>
-            <Card onClick={() => navigate(`/token/${token.id}`)}>
+          <Grid item xs={12} sm={6} md={4} key={token.contract_address}>
+            <Card onClick={() => navigate(`/token/${token.contract_address}`)}>
               <CardContent>
                 <Typography variant="h5">{token.name}</Typography>
-                <Typography variant="body2">ID: {token.id}</Typography>
+                <Typography variant="body2">ID: {token.contract_address}</Typography>
                 <Typography variant="body2">Symbol: {token.symbol}</Typography>
                 <Typography variant="body2">
                   Supply: {token.total_supply}

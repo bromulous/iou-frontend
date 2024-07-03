@@ -16,6 +16,7 @@ const BondIssuanceFlow = () => {
   const { currentUserId } = useContext(UserContext);
   const steps = ["Project Info", "Bond Details", "Auction Schedule", "Repayment Details", "Summary"];
   const [activeStep, setActiveStep] = useState(0);
+  const [draftId, setDraftId] = useState(bond?.draft_id || null);
   const [projectInfo, setProjectInfo] = useState(bond?.project_info || {
     name: "",
     description: "",
@@ -69,7 +70,8 @@ const BondIssuanceFlow = () => {
     setActiveStep(index);
   };
 
-  const handleSaveDraft = async () => {
+  const handleSaveDraft = async (show_alert=true) => {
+    let res;
     if  ( bondDetails.tokens <= 0) {
         bondDetails.tokenPrice = 0
     } else {
@@ -82,15 +84,19 @@ const BondIssuanceFlow = () => {
       auction_schedule: auctionSchedule,
       bond_repayment: bondRepayment,
     };
-    if (bond?.draft_id) {
-      draft.draft_id = bond.draft_id;
+    if (draftId !== null) {
+      draft.draft_id =draftId;
     }
     try {
-      await backend.post(`/users/${currentUserId}/save_draft`, draft);
-      alert("Draft saved!");
+      res = await backend.post(`/users/${currentUserId}/save_draft`, draft);
+      setDraftId(res.data.draft_id);
+      if (show_alert) {
+        alert("Draft saved!");
+      }
     } catch (error) {
       console.error("Error saving draft:", error);
     }
+    return res;
   };
 
   const handleFinish = async () => {
@@ -99,25 +105,25 @@ const BondIssuanceFlow = () => {
   }
 
   const handlePublishBond = async () => {
-    const bond = {
-        name: bondDetails.title,
-        symbol: bondDetails.tokenSymbol,
-        total_supply: parseFloat(bondDetails.totalAmount),
-        interest_rate: parseFloat(bondDetails.interestRate),
-        maturity_date: new Date(),
-        bond_repayment: bondRepayment,
-        is_callable: bondRepayment.earlyRepayment,
-        is_convertible: bondRepayment.collateral,
-        penalty_rate: parseFloat(bondRepayment.latePenalty),
-        requires_full_sale: auctionSchedule.requiresFullSale,
-        min_price: parseFloat(auctionSchedule.minPrice),
-        early_withdrawal: bondRepayment.earlyRepayment,
+    let response;
+
+    response = await handleSaveDraft(false);
+    if ( response.status !== 200) {
+      alert("Error saving draft");
+      return;
+    };
+    const data = {
+        user_id: currentUserId,
+        draft_id: response.data.draft_id,
       };
     try {
-      await backend.post(`/users/${currentUserId}/issue_bond`, bond);
+      await backend.post(`/users/${currentUserId}/issue_bond`, data);
       alert("Bond published!");
+      navigate(`/profile/${currentUserId}`);
+
     } catch (error) {
       console.error("Error publishing bond:", error);
+      alert("Error publishing bond");
     }
   };
 

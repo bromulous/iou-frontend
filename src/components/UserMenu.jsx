@@ -176,7 +176,7 @@ const UserMenu = ({ anchorEl, open, onClose, onUserSwitch }) => {
                   onChange={(e) => setSelectedToken(e.target.value)}
                 >
                   {tokens.map((token) => (
-                    <MenuItem key={token.id} value={token.symbol}>
+                    <MenuItem key={token.contract_address} value={token.symbol}>
                       {token.name}
                     </MenuItem>
                   ))}

@@ -124,7 +124,7 @@ const Profile = () => {
               onChange={(e) => setSelectedToken(e.target.value)}
             >
               {tokens.map((token) => (
-                <MenuItem key={token.id} value={token.symbol}>
+                <MenuItem key={token.contract_address} value={token.symbol}>
                   {token.name}
                 </MenuItem>
               ))}
@@ -167,7 +167,7 @@ const Profile = () => {
         </Typography>
         <Grid container spacing={2}>
           {user.tokens_held.map((token) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={token.id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={token.contract_address}>
               <Card>
                 <CardContent>
                   <Typography variant="h6">{token.name}</Typography>
