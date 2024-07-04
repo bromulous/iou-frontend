@@ -29,11 +29,14 @@ const Users = () => {
   const [newTokenName, setNewTokenName] = useState("");
   const [newTokenSymbol, setNewTokenSymbol] = useState("");
   const [newTokenSupply, setNewTokenSupply] = useState(10000000000);
+  const [currentBlock, setCurrentBlock] = useState(0);
+  const [newBlockDays, setNewBlockDays] = useState(0.0);
 
   useEffect(() => {
     fetchUsers();
     fetchCurrentUser();
     fetchTokens();
+    fetchCurrentBlock();
   }, []);
 
   const handleOpenTokenDialog = () => {
@@ -43,6 +46,19 @@ const Users = () => {
   const handleCloseTokenDialog = () => {
     setOpenTokenDialog(false);
   };
+
+  const handleNewBlockDaysSubmit = async function(){
+    try {
+      const response = await backend.post("/advance_current_block_by_days", {
+        days_to_advance: newBlockDays
+      });
+      setCurrentBlock(response.data.new_current_block);
+      setNewBlockDays("");
+    } catch (error) {
+      console.error("Error updating blocks by days: ", error)
+    }
+
+  }
 
   const handleCreateToken = async () => {
     try {
@@ -65,6 +81,15 @@ const Users = () => {
     const response = await backend.get("/users");
     setUsers(response.data);
   };
+
+  const fetchCurrentBlock = async function() {
+    try {
+      const response = await backend.get('/current_block');
+      setCurrentBlock(response.data.current_block);
+    } catch (error) {
+      console.error("Error fetching current block: ", error);
+    }
+  }
 
   const fetchCurrentUser = async () => {
     try {
@@ -225,6 +250,26 @@ const Users = () => {
             </CardContent>
           </Card>
         </Grid>
+      </Grid>
+      <Typography variant="h4" gutterBottom>
+        Blocks
+      </Typography>
+      <Grid container>
+        <Card>
+          <CardContent>
+            <Typography variant="p" gutterBottom>
+            Current Block: {currentBlock}
+            </Typography>
+            <br></br><br></br>
+            <TextField
+              margin="dense"
+              label="Change Blocks by Days"
+              value={newBlockDays}
+              onChange = {(e) => setNewBlockDays(e.target.value)}
+              />
+            <Button onClick={handleNewBlockDaysSubmit} >Submit</Button>
+          </CardContent>
+        </Card>
       </Grid>
       <Dialog open={openTokenDialog} onClose={handleCloseTokenDialog}>
         <DialogTitle>Create New Token</DialogTitle>

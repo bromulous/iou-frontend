@@ -215,7 +215,7 @@ const UserMenu = ({ anchorEl, open, onClose, onUserSwitch }) => {
         {/* <MenuItem onClick={() => handleOpenDialog("addFunds")}>
           Add Funds
         </MenuItem> */}
-        <MenuItem onClick={() => navigate('/users')}>Users</MenuItem>
+        <MenuItem onClick={() => navigate('/users')}>Admin</MenuItem>
         {/* <MenuItem onClick={onClose}>Activity</MenuItem> */}
         <MenuItem onClick={() => navigate('/issue-bond')}>Issue Bond</MenuItem>
         <MenuItem onClick={onClose}>Disconnect Wallet</MenuItem>
