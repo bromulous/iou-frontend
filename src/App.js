@@ -13,6 +13,7 @@ import IssueBond from "./components/IssueBond";
 import BondIssuanceFlow from "./components/BondIssuanceFlow";
 import About from "./components/About";
 import Profile from "./components/Profile";
+import BondDetail from "./components/BondDetail";
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -72,6 +73,7 @@ const App = () => {
           }
         />
         <Route path="/profile/:userId" element={<Layout><Profile /></Layout>} />
+        <Route path="/bond/:bondId" element={<Layout><BondDetail /></Layout>} />
       </Routes>
     </Router>
   );

@@ -33,7 +33,6 @@ const BondIssuanceFlow = () => {
     tokenSymbol: "",
     interestRate: 0,
     requiresFullSale: false,
-    latePenalty: 0,
     earlyRepayment: false,
     collateral: false,
   });
@@ -54,6 +53,7 @@ const BondIssuanceFlow = () => {
     repaymentType: "interest-only",
     paymentSchedule: "fixed",
     fixedPaymentInterval: { days: 0, months: 0, years: 0 },
+    latePenalty: 0,
     customRepaymentSchedule: [],
   });
 

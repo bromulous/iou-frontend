@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -9,6 +10,7 @@ import {
   Avatar,
 } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { N } from "ethers";
 
 const BondCardV2 = ({ bond }) => {
   const {
@@ -28,6 +30,11 @@ const BondCardV2 = ({ bond }) => {
     image_url,
     late_penalty
   } = bond;
+  const navigate = useNavigate();
+
+  const handleSeeBondDetails = () => {
+    navigate(`/bond/${contract_address}`);
+  }
 
   const displayDuration = `${duration.years}y ${duration.months}m ${duration.days}d`;
 
@@ -89,7 +96,7 @@ const BondCardV2 = ({ bond }) => {
       <CardActions>
         <Button
           size="small"
-          href={`/bond/${contract_address}`}
+            onClick={handleSeeBondDetails}
           sx={{ textTransform: "none" }}
           endIcon={<ArrowForwardIosIcon />}
         >
