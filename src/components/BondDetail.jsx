@@ -3,6 +3,7 @@ import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import backend from "../api";
 import { UserContext } from "../contexts/UserContext";
+import SwapComponent from "./SwapComponent";
 
 
 const BondDetail = () => {
@@ -38,6 +39,7 @@ const BondDetail = () => {
       </Box>
     );
   }
+
 
   if (error) {
     return (
@@ -90,6 +92,7 @@ const BondDetail = () => {
         <br />
         Bond Status: {bond.bond_status}
         <br />
+        <SwapComponent sendTokenSymbol={"FRAX"} sendTokenAddress={bond.bond_details.paymentTokenAddress} receiveTokenSymbol={bond.bond_details.tokenSymbol} receiveTokenAddress={bond.contract_address} purchasePrice={bond.current_auction_price} />
         <Button
           variant="contained"
           color="primary"

@@ -173,7 +173,7 @@ const Profile = () => {
                 <CardContent>
                   <Typography variant="h6">{token.name}</Typography>
                   <Typography variant="body2">
-                    Balance: {token.balances[userId]}
+                    Balance: {token.balance}
                   </Typography>
                 </CardContent>
               </Card>
