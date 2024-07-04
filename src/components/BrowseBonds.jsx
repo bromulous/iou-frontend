@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+
+
+import React, { useEffect, useState } from "react";
 import {
     Button,
   Box,
@@ -12,11 +14,12 @@ import {
   Paper,
   IconButton,
 } from "@mui/material";
-import { bonds } from "../utils/dummyData";
-import BondCard from "./BondCard";
+import { dummyBonds } from "../utils/dummyData";
+import BondCardV2 from "./BondCardV2";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import backend from "../api";
 
 const BrowseBonds = () => {
   const [search, setSearch] = useState("");
@@ -24,22 +27,33 @@ const BrowseBonds = () => {
   const [auctionStatus, setAuctionStatus] = useState("");
   const [minInterestRate, setMinInterestRate] = useState("");
   const [maxMaturityDate, setMaxMaturityDate] = useState("");
+  const [bonds, setBonds] = useState([])
+
+  const fetchBonds = async () => {
+    const response = await backend.get('/bonds');
+    setBonds(response.data);
+  }
+
+  useEffect(function(){
+    fetchBonds();
+  }, [])
 
   const filterBonds = (status) =>
     bonds.filter((bond) => {
       return (
         (!search || bond.issuer.toLowerCase().includes(search.toLowerCase())) &&
         (!type || bond.type === type) &&
-        (!auctionStatus || bond.auctionStatus === status) &&
+        (!auctionStatus || bond.auctionStatus === auctionStatus) &&
         (!minInterestRate || bond.interestRate >= minInterestRate) &&
         (!maxMaturityDate ||
-          new Date(bond.maturityDate) <= new Date(maxMaturityDate))
+          new Date(bond.maturityDate) <= new Date(maxMaturityDate)) &&
+        (status == bond.status)
       );
     });
 
   const sections = [
     { title: "Active Auctions", bonds: filterBonds("Active") },
-    { title: "Upcoming Auctions", bonds: filterBonds("Upcoming") },
+    { title: "Upcoming Auctions", bonds: filterBonds("Pre-Auction") },
     { title: "New Bonds", bonds: bonds.slice(0, 5) }, // Assuming new bonds are the latest 5 bonds
     {
       title: "Expiring Soon",
@@ -149,7 +163,7 @@ const BrowseBonds = () => {
           >
             {section.bonds.map((bond) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={bond.id}>
-                <BondCard bond={bond} />
+                <BondCardV2 bond={bond} />
               </Grid>
             ))}
             <Grid item xs={12} sm={6} md={4} lg={3}>

@@ -1,7 +1,7 @@
 import ReactLogo from '../logo.svg';
 const defaultLogo = ReactLogo;
 
-export const bonds = [
+const dummyBonds = [
   {
     id: 1,
     type: "Non-convertible",
