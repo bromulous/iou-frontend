@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import backend from '../api';
 import { UserContext } from "../contexts/UserContext";
 import { useParams } from 'react-router-dom';
+import BondMainDetail from './BondMainDetail';
+import BondIssuerDetail from './BondIssuerDetail';
+import BondOwnerDetail from './BondOwnerDetail';
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -38,6 +41,10 @@ const BondDetailsTabbedComponent = () => {
   const [bond, setBond] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const handleSnapshotTaken = () => {
+    fetchBondDetails();
+  };
 
   const fetchBondDetails = async () => {
     console.log("Fetching bond details");
@@ -81,16 +88,16 @@ const BondDetailsTabbedComponent = () => {
             {isEligibleForTab3 && <Tab label="Manage Bond" />}
           </Tabs>
           <TabPanel value={value} index={0}>
-            <Tab1Content bond={bond} refetchData={fetchBondDetails} />
+            <Tab1Content bond={bond} bondId={bondId} currentUserId={currentUserId} handleSnapshotTaken={handleSnapshotTaken} refetchData={fetchBondDetails} />
           </TabPanel>
           {isEligibleForTab2 && (
             <TabPanel value={value} index={1}>
-              <Tab2Content bond={bond} refetchData={fetchBondDetails} />
+              <Tab2Content bond={bond} bondId={bondId} currentUserId={currentUserId} fetchBondDetails={fetchBondDetails} refetchData={fetchBondDetails} />
             </TabPanel>
           )}
           {isEligibleForTab3 && (
             <TabPanel value={value} index={2}>
-              <Tab3Content bond={bond} refetchData={fetchBondDetails} />
+              <Tab3Content bond={bond} bondId={bondId} currentUserId={currentUserId} fetchBondDetails={fetchBondDetails} refetchData={fetchBondDetails} />
             </TabPanel>
           )}
         </>
@@ -99,39 +106,39 @@ const BondDetailsTabbedComponent = () => {
   );
 };
 
-const Tab1Content = ({ bond, refetchData }) => (
+const Tab1Content = ({ bond, bondId, currentUserId, handleSnapshotTaken, refetchData }) => (
   <Card variant="outlined">
     <CardContent>
       <Typography variant="h6" gutterBottom>Bond</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography variant="body1">{JSON.stringify(bond, null, 2)}</Typography>
+          <BondMainDetail bond={bond} bondId={bondId} currentUserId={currentUserId} handleSnapshotTaken={handleSnapshotTaken} />
         </Grid>
       </Grid>
     </CardContent>
   </Card>
 );
 
-const Tab2Content = ({ bond, refetchData }) => (
+const Tab2Content = ({ bond, bondId, currentUserId, fetchBondDetails, refetchData }) => (
   <Card variant="outlined">
     <CardContent>
       <Typography variant="h6" gutterBottom>Tab 2 Content</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography variant="body1">{JSON.stringify(bond, null, 2)}</Typography>
+          <BondOwnerDetail bond={bond} bondId={bondId} currentUserId={currentUserId} fetchBondDetails={fetchBondDetails} />
         </Grid>
       </Grid>
     </CardContent>
   </Card>
 );
 
-const Tab3Content = ({ bond, refetchData }) => (
+const Tab3Content = ({ bond, bondId, currentUserId, fetchBondDetails, refetchData }) => (
   <Card variant="outlined">
     <CardContent>
       <Typography variant="h6" gutterBottom>Tab 3 Content</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography variant="body1">{JSON.stringify(bond, null, 2)}</Typography>
+          <BondIssuerDetail bond={bond} bondId={bondId} currentUserId={currentUserId} fetchBondDetails={fetchBondDetails} />
         </Grid>
       </Grid>
     </CardContent>
