@@ -6,7 +6,11 @@ import { UserContext } from "../contexts/UserContext";
 import SwapComponent from "./SwapComponent";
 import GoalProgress from "./GoalProgress";
 import SnapshotCard from "./SnapshotCard";
-
+import UserSnapshotDetailsCard from "./UserSnapshotDetailsCard";
+import ClaimAllCard from "./ClaimAllCard";
+import IssuerOwedBreakdownList from "./IssuerOwedBreakdownList";
+import PaymentComponent from "./PaymentComponent";
+import WithdrawFundsComponent from "./WithdrawFundsComponent";
 const BondDetail = () => {
   const { bondId } = useParams();
   const navigate = useNavigate();
@@ -119,6 +123,11 @@ const BondDetail = () => {
           balance={bond.remaining_tokens}
         />
         <SnapshotCard user_id={currentUserId} bond_id={bondId} current_block={bond.current_block} next_snapshot_block={bond.next_eligible_snapshot} onSnapshotTaken={handleSnapshotTaken} />
+        <UserSnapshotDetailsCard snapshot = {bond.amount_user_entitled_to_and_claimable} />
+        <ClaimAllCard snapshots = {bond.amount_user_entitled_to_and_claimable} userId = {currentUserId} bondId = {bondId} claimCallback = {fetchBondDetails} />
+        <IssuerOwedBreakdownList records = {bond.total_issuer_owes_break_down} />
+        <PaymentComponent total_principal_owed={bond.total_issuers_owes.total_principal_owed} total_penalty_owed={bond.total_issuers_owes.total_penalty_owed} payment_token_address={bond.bond_details.paymentTokenAddress} bond_id={bondId} onPaymentSuccess={fetchBondDetails} />
+        <WithdrawFundsComponent token_price = {bond.bond_details.tokenPrice} has_withdrawn_funds={bond.withdrawn_funds} user_id = {currentUserId} supply = {bond.total_supply} bond_id = {bond.contract_address} available_funds={bond.funds_from_bond_purchase} onWithdrawSuccess={fetchBondDetails}/>
         <Button
           variant="contained"
           color="primary"
