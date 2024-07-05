@@ -34,6 +34,7 @@ const AuctionScheduleStep = ({ bondDetails, auctionSchedule, setAuctionSchedule,
               setAuctionSchedule({
                 ...auctionSchedule,
                 auctionType: e.target.value,
+                adjustAutomatically: e.target.value === "automatic",
               })
             }
           >

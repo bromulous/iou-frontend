@@ -40,7 +40,7 @@ const BondIssuanceFlow = () => {
     auctionType: "automatic",
     auctionDuration: {days: 3, hours: 0},
     auctionEndCondition: "full-sale",
-    adjustAutomatically: false,
+    adjustAutomatically: true,
     adjustmentType: "percentage",
     adjustmentDetails: { intervalDays: 1, intervalHours: 0, amount: 0, rate: 0 },
     minPrice: 0,

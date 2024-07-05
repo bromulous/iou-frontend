@@ -3,18 +3,18 @@ import { TextField, Button, Typography, Box, Snackbar, IconButton } from '@mui/m
 import { SwapVert as SwapIcon } from '@mui/icons-material';
 import backend from "../api";
 import { UserContext } from "../contexts/UserContext";
-const SwapComponent = ({ sendTokenSymbol, receiveTokenSymbol, sendTokenAddress, receiveTokenAddress, purchasePrice }) => {
+import FRAX_icon from "../assets/FRAX_icon.webp";
+
+const SwapComponent = ({ sendTokenSymbol, receiveTokenSymbol, sendTokenAddress, receiveTokenAddress, purchasePrice, bond_status }) => {
   const [sendAmount, setSendAmount] = useState('');
   const [receiveAmount, setReceiveAmount] = useState('');
   const [sendBalance, setSendBalance] = useState(0);
   const [receiveBalance, setReceiveBalance] = useState(0);
   const [approvedAmount, setApprovedAmount] = useState(0);
-  const [isApproved, setIsApproved] = useState(false);
   const [notification, setNotification] = useState({ open: false, message: '', type: '' });
   const { currentUserId } = useContext(UserContext);
 
   useEffect(() => {
-    // Fetch the balances and approved amounts
     const fetchBalancesAndApprovals = async () => {
       try {
         const sendBalanceResponse = await backend.get(`/balance/${sendTokenAddress}`, { params: { user_id: currentUserId } });
@@ -32,22 +32,39 @@ const SwapComponent = ({ sendTokenSymbol, receiveTokenSymbol, sendTokenAddress, 
     fetchBalancesAndApprovals();
   }, [sendTokenAddress, receiveTokenAddress]);
 
-  const handleSendAmountChange = (e) => {
+  const handleSendAmountChange = async (e) => {
     const value = e.target.value;
     setSendAmount(value);
     setReceiveAmount(value / purchasePrice);
+
+    // Re-fetch the approved amount to check if it's still sufficient
+    try {
+      const approvedAmountResponse = await backend.get(`/approved/${sendTokenAddress}`, { params: { user_id: currentUserId, spender_id: receiveTokenAddress } });
+      setApprovedAmount(approvedAmountResponse.data.approvedAmount);
+    } catch (error) {
+      console.error('Error fetching approved amount:', error);
+    }
   };
 
-  const handleReceiveAmountChange = (e) => {
+  const handleReceiveAmountChange = async (e) => {
     const value = e.target.value;
     setReceiveAmount(value);
     setSendAmount(value * purchasePrice);
+
+    // Re-fetch the approved amount to check if it's still sufficient
+    try {
+      const approvedAmountResponse = await backend.get(`/approved/${sendTokenAddress}`, { params: { user_id: currentUserId, spender_id: receiveTokenAddress } });
+      setApprovedAmount(approvedAmountResponse.data.approvedAmount);
+    } catch (error) {
+      console.error('Error fetching approved amount:', error);
+    }
   };
 
   const handleApprove = async () => {
     try {
-      await backend.post(`/approve/${sendTokenAddress}`, { user_id: currentUserId, amount: sendAmount });
-      setIsApproved(true);
+      await backend.post(`/approve/${sendTokenAddress}`, { user_id: currentUserId, spender: receiveTokenAddress, amount: sendAmount });
+      const approvedAmountResponse = await backend.get(`/approved/${sendTokenAddress}`, { params: { user_id: currentUserId, spender_id: receiveTokenAddress } });
+      setApprovedAmount(approvedAmountResponse.data.approvedAmount);
       setNotification({ open: true, message: 'Approval successful', type: 'success' });
     } catch (error) {
       setNotification({ open: true, message: 'Approval failed', type: 'error' });
@@ -65,6 +82,7 @@ const SwapComponent = ({ sendTokenSymbol, receiveTokenSymbol, sendTokenAddress, 
         user_id: currentUserId
       });
       setSendBalance((prev) => prev - sendAmount);
+      setApprovedAmount((prev) => prev - sendAmount);
       setReceiveBalance((prev) => prev + receiveAmount);
       setNotification({ open: true, message: 'Swap successful', type: 'success' });
     } catch (error) {
@@ -73,8 +91,11 @@ const SwapComponent = ({ sendTokenSymbol, receiveTokenSymbol, sendTokenAddress, 
     }
   };
 
+  const isSwapDisabled = sendAmount > sendBalance || sendAmount <= 0 || receiveAmount <= 0 || bond_status !== 'Auction Live';
+  const isApproveDisabled = sendAmount <= approvedAmount;
+
   return (
-    <Box p={3} bgcolor="lightblue" borderRadius={4} width={300}>
+    <Box p={3} boxShadow={2} borderRadius={4} width={300}>
       <Typography variant="h6">Token Swap</Typography>
       <TextField
         label="Send"
@@ -86,7 +107,7 @@ const SwapComponent = ({ sendTokenSymbol, receiveTokenSymbol, sendTokenAddress, 
         InputProps={{
           endAdornment: (
             <Box display="flex" alignItems="center">
-              <img src="/path/to/sendTokenIcon.png" alt={sendTokenSymbol} width={24} height={24} />
+              <img src={FRAX_icon} alt={sendTokenSymbol} width={24} height={24} />
               <Typography variant="body2">{sendTokenSymbol}</Typography>
             </Box>
           ),
@@ -117,15 +138,27 @@ const SwapComponent = ({ sendTokenSymbol, receiveTokenSymbol, sendTokenAddress, 
       <Typography variant="body2" align="right">
         Balance: {receiveBalance}
       </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={isApproved ? handleSwap : handleApprove}
-        fullWidth
-        disabled={sendAmount > sendBalance || (isApproved && sendAmount > approvedAmount)}
-      >
-        {isApproved ? 'Swap' : 'Approve'}
-      </Button>
+      {isApproveDisabled ? (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSwap}
+          fullWidth
+          disabled={isSwapDisabled}
+        >
+          Swap
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleApprove}
+          fullWidth
+          disabled={isSwapDisabled}
+        >
+          Approve
+        </Button>
+      )}
       <Snackbar
         open={notification.open}
         autoHideDuration={3000}

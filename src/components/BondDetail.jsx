@@ -92,7 +92,7 @@ const BondDetail = () => {
         <br />
         Bond Status: {bond.bond_status}
         <br />
-        <SwapComponent sendTokenSymbol={"FRAX"} sendTokenAddress={bond.bond_details.paymentTokenAddress} receiveTokenSymbol={bond.bond_details.tokenSymbol} receiveTokenAddress={bond.contract_address} purchasePrice={bond.current_auction_price} />
+        <SwapComponent sendTokenSymbol={"FRAX"} sendTokenAddress={bond.bond_details.paymentTokenAddress} receiveTokenSymbol={bond.bond_details.tokenSymbol} receiveTokenAddress={bond.contract_address} purchasePrice={bond.current_auction_price} bond_status={bond.bond_status} />
         <Button
           variant="contained"
           color="primary"
