@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import backend from "../api";
 import { UserContext } from "../contexts/UserContext";
 import SwapComponent from "./SwapComponent";
-
+import GoalProgress from "./GoalProgress";
 
 const BondDetail = () => {
   const { bondId } = useParams();
@@ -16,12 +16,14 @@ const BondDetail = () => {
 
   useEffect(() => {
     const fetchBondDetails = async () => {
-      console.log("Fetching bond details")
+      console.log("Fetching bond details");
       const body = {
-        user_id : currentUserId
+        user_id: currentUserId,
       };
       try {
-        const res = await backend.get(`/bond/${bondId}`, { params: { user_id: currentUserId } });
+        const res = await backend.get(`/bond/${bondId}`, {
+          params: { user_id: currentUserId },
+        });
         setBond(res.data);
         setLoading(false);
       } catch (err) {
@@ -39,7 +41,6 @@ const BondDetail = () => {
       </Box>
     );
   }
-
 
   if (error) {
     return (
@@ -92,7 +93,25 @@ const BondDetail = () => {
         <br />
         Bond Status: {bond.bond_status}
         <br />
-        <SwapComponent sendTokenSymbol={"FRAX"} sendTokenAddress={bond.bond_details.paymentTokenAddress} receiveTokenSymbol={bond.bond_details.tokenSymbol} receiveTokenAddress={bond.contract_address} purchasePrice={bond.current_auction_price} bond_status={bond.bond_status} />
+        <SwapComponent
+          sendTokenSymbol={"FRAX"}
+          sendTokenAddress={bond.bond_details.paymentTokenAddress}
+          receiveTokenSymbol={bond.bond_details.tokenSymbol}
+          receiveTokenAddress={bond.contract_address}
+          purchasePrice={bond.current_auction_price}
+          bond_status={bond.bond_status}
+        />
+        <GoalProgress
+          description={bond.project_info.description}
+          totalAmount={bond.bond_details.totalAmount}
+          currentAmount={bond.total_supply}
+          totalValue={
+            bond.bond_details.totalAmount * bond.bond_details.tokenPrice
+          }
+          apr={bond.apr}
+          price={bond.current_auction_price}
+          balance={bond.remaining_tokens}
+        />
         <Button
           variant="contained"
           color="primary"
