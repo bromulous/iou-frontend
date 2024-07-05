@@ -9,6 +9,10 @@ const BondMainDetail = function({bond, bondId, currentUserId, handleSnapshotTake
     return (
         <Box mt={5}>
             <GoalProgress
+            fetchBondDetails= {handleSnapshotTaken}
+            bondId={bondId}
+            currentUserId={currentUserId}
+            handleSnapshotTaken={handleSnapshotTaken}
                 description={bond.project_info.description}
                 totalAmount={bond.bond_details.totalAmount}
                 currentAmount={bond.total_supply}

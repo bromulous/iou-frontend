@@ -1,23 +1,20 @@
 import React from 'react';
 import ClaimAllCard from './ClaimAllCard';
-import { Card, CardContent, Container, Typography } from '@mui/material';
+import { Card, CardContent, Container, Typography, Grid, Box } from '@mui/material';
 
-const UserSnapshotDetailsCard = ({ snapshot: snapshots }) => {
+const UserSnapshotDetailsCard = ({ snapshot }) => {
   return (
-    <Card style={{ marginBottom: '1rem' }}>
+    <Card sx={{ maxWidth: 400 }}>
       <CardContent>
-        <Typography variant="h6">Snapshot Block: {snapshots.snapshot_block}</Typography>
-        <Typography variant="body1">Principal Owed: {snapshots.principal_owed}</Typography>
-        <Typography variant="body1">Penalty Owed: {snapshots.penalty_owed}</Typography>
-        <Typography variant="body1">Amount Already Claimed: {snapshots.amount_already_claimed}</Typography>
-        <Typography variant="body1">Available to Claim: {snapshots.available_to_claim}</Typography>
+        <Typography variant="h6">Snapshot Block: {snapshot.snapshot_block}</Typography>
+        <Typography variant="body1">Principal Owed: {snapshot.principal_owed}</Typography>
+        <Typography variant="body1">Penalty Owed: {snapshot.penalty_owed}</Typography>
+        <Typography variant="body1">Amount Already Claimed: {snapshot.amount_already_claimed}</Typography>
+        <Typography variant="body1">Available to Claim: {snapshot.available_to_claim}</Typography>
       </CardContent>
     </Card>
   );
 };
-
-
-
 
 const ClaimSnapShotDetails = ({ snapshots, userId, bondId, claimCallback }) => {
   return (
@@ -25,13 +22,16 @@ const ClaimSnapShotDetails = ({ snapshots, userId, bondId, claimCallback }) => {
       <Typography variant="h4" gutterBottom>
         Claimable Amounts
       </Typography>
-      {snapshots.map((snapshot, index) => (
-        <UserSnapshotDetailsCard
-          key={index}
-          snapshot={snapshot}
-        />
-      ))}
-      <ClaimAllCard snapshots={snapshots} userId={userId} bondId={bondId} claimCallback={claimCallback} />
+      <Grid container spacing={2}>
+        {snapshots.map((snapshot, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <UserSnapshotDetailsCard snapshot={snapshot} />
+          </Grid>
+        ))}
+      </Grid>
+      <Box display="flex" justifyContent="center" mt={3}>
+        <ClaimAllCard snapshots={snapshots} userId={userId} bondId={bondId} claimCallback={claimCallback} />
+      </Box>
     </Container>
   );
 };

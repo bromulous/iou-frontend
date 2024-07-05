@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { TextField, Button, Typography, Box, Snackbar, Divider } from '@mui/material';
 import backend from "../api";
 import { UserContext } from "../contexts/UserContext";
-import PaymentIcon from "@mui/icons-material/Payment"; // Placeholder for the payment icon
+import FRAX_icon from "../assets/FRAX_icon.webp";
 
 const PaymentComponent = ({ total_principal_owed, total_penalty_owed, payment_token_address, user_id, bond_id, onPaymentSuccess }) => {
   const [paymentAmount, setPaymentAmount] = useState('');
@@ -67,20 +67,20 @@ const PaymentComponent = ({ total_principal_owed, total_penalty_owed, payment_to
       <Typography variant="h6">Payment</Typography>
       <Typography variant="body2">
         Total Principal Owed: 
-        <span onClick={() => handleAmountClick(total_principal_owed)} style={{ cursor: 'pointer',  }}>
+        <span onClick={() => handleAmountClick(total_principal_owed)} style={{ cursor: 'pointer', }}>
           {total_principal_owed}
         </span>
       </Typography>
       <Typography variant="body2">
         Total Penalty Owed: 
-        <span onClick={() => handleAmountClick(total_penalty_owed)} style={{ cursor: 'pointer',  }}>
+        <span onClick={() => handleAmountClick(total_penalty_owed)} style={{ cursor: 'pointer', }}>
           {total_penalty_owed}
         </span>
       </Typography>
       <Divider style={{ margin: '10px 0' }} />
       <Typography variant="body2" gutterBottom>
         Total Owed: 
-        <span onClick={() => handleAmountClick(totalOwed)} style={{ cursor: 'pointer',  }}>
+        <span onClick={() => handleAmountClick(totalOwed)} style={{ cursor: 'pointer', }}>
           {totalOwed}
         </span>
       </Typography>
@@ -94,7 +94,7 @@ const PaymentComponent = ({ total_principal_owed, total_penalty_owed, payment_to
         InputProps={{
           endAdornment: (
             <Box display="flex" alignItems="center">
-              <PaymentIcon />
+              <img src={FRAX_icon} alt="FRAX" width={24} height={24} />
             </Box>
           ),
         }}

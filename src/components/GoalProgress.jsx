@@ -1,19 +1,21 @@
 import React from 'react';
 import { Card, CardContent, Typography, LinearProgress, Box, Grid, Divider } from '@mui/material';
 import SwapComponent from './SwapComponent';
-const GoalProgress = ({ description, totalAmount, currentAmount, totalValue, apr, price, balance, title, issuer, duration, bondStatus, startDate, bond}) => {
+import SnapshotCard from './SnapshotCard';
+
+const GoalProgress = ({ description, totalAmount, currentAmount, totalValue, apr, price, balance, title, issuer, duration, bondStatus, startDate, bond, currentUserId, bondId, fetchBondDetails }) => {
     const progress = (currentAmount / totalAmount) * 100;
 
     const date = new Date(startDate);
 
     const options = { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric', 
-    hour: 'numeric', 
-    minute: 'numeric',
-    second: 'numeric',
-    hour12: true // Set to false for 24-hour time format
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: 'numeric', 
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true // Set to false for 24-hour time format
     };
     const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
 
@@ -64,17 +66,26 @@ const GoalProgress = ({ description, totalAmount, currentAmount, totalValue, apr
                     justifyContent="center"
                     height="100%"
                 >
-                    <SwapComponent
-                        sendTokenSymbol={"FRAX"}
-                        sendTokenAddress={bond.bond_details.paymentTokenAddress}
-                        receiveTokenSymbol={bond.bond_details.tokenSymbol}
-                        receiveTokenAddress={bond.contract_address}
-                        purchasePrice={bond.current_auction_price}
-                        bond_status={bond.bond_status}
-                        bond={bond}
-                    />
+                    {bondStatus === 'Bond Live' ? (
+                        <SnapshotCard 
+                            user_id={currentUserId} 
+                            bond_id={bondId} 
+                            current_block={bond.current_block} 
+                            next_snapshot_block={bond.next_eligible_snapshot} 
+                            onSnapshotTaken={fetchBondDetails} 
+                        />
+                    ) : (
+                        <SwapComponent
+                            sendTokenSymbol={"FRAX"}
+                            sendTokenAddress={bond.bond_details.paymentTokenAddress}
+                            receiveTokenSymbol={bond.bond_details.tokenSymbol}
+                            receiveTokenAddress={bond.contract_address}
+                            purchasePrice={bond.current_auction_price}
+                            bond_status={bond.bond_status}
+                            bond={bond}
+                        />
+                    )}
                 </Box>
-
             </CardContent>
         </Card>
     );

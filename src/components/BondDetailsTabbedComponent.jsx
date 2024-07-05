@@ -70,7 +70,7 @@ const BondDetailsTabbedComponent = () => {
 
   // Dummy eligibility check
   const isEligibleForTab2 = currentUserId % 2 === 0;
-  const isEligibleForTab3 = currentUserId % 3 === 0;
+  const isEligibleForTab3 = bond?.issuer === currentUserId || false;
 
   return (
     <div>
@@ -83,9 +83,9 @@ const BondDetailsTabbedComponent = () => {
       ) : (
         <>
           <Tabs value={value} onChange={handleChange} aria-label="bond details tabs">
-            <Tab label="Bond Details" />
-            {isEligibleForTab2 && <Tab label="Bond Holders" />}
-            {isEligibleForTab3 && <Tab label="Manage Bond" />}
+            <Tab label="IOU Details" />
+            {isEligibleForTab2 && <Tab label="IOU Holders" />}
+            {isEligibleForTab3 && <Tab label="Manage IOU" />}
           </Tabs>
           <TabPanel value={value} index={0}>
             <Tab1Content bond={bond} bondId={bondId} currentUserId={currentUserId} handleSnapshotTaken={handleSnapshotTaken} refetchData={fetchBondDetails} />
@@ -121,7 +121,6 @@ const Tab1Content = ({ bond, bondId, currentUserId, handleSnapshotTaken, refetch
 const Tab2Content = ({ bond, bondId, currentUserId, fetchBondDetails, refetchData }) => (
   <Card variant="outlined">
     <CardContent>
-      <Typography variant="h6" gutterBottom>Tab 2 Content</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <BondOwnerDetail bond={bond} bondId={bondId} currentUserId={currentUserId} fetchBondDetails={fetchBondDetails} />
@@ -134,7 +133,7 @@ const Tab2Content = ({ bond, bondId, currentUserId, fetchBondDetails, refetchDat
 const Tab3Content = ({ bond, bondId, currentUserId, fetchBondDetails, refetchData }) => (
   <Card variant="outlined">
     <CardContent>
-      <Typography variant="h6" gutterBottom>Tab 3 Content</Typography>
+      <Typography variant="h6" gutterBottom>IOU Status: {bond?.bond_status || "Loading"}</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <BondIssuerDetail bond={bond} bondId={bondId} currentUserId={currentUserId} fetchBondDetails={fetchBondDetails} />
