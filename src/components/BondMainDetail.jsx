@@ -8,61 +8,23 @@ import UserSnapshotDetailsCard from "./UserSnapshotDetailsCard";
 const BondMainDetail = function({bond, bondId, currentUserId, handleSnapshotTaken}){
     return (
         <Box mt={5}>
-            <Typography variant="h4" gutterBottom>
-                {bond.issuer}
-            </Typography>
-            <Typography variant="h6" gutterBottom>
-                {bond.bond_details.title}
-            </Typography>
-            <Typography variant="body1" paragraph>
-                Total Supply: {bond.total_supply}
-                <br />
-                Total Amount: {bond.bond_details.totalAmount}
-                <br />
-                Token Price: {bond.bond_details.tokenPrice}
-                <br />
-                Interest Rate: {bond.bond_details.interestRate}%
-                <br />
-                APR: {bond.apr}%
-                <br />
-                Purpose: {bond.project_info.description}
-                <br />
-                Auction Type: {bond.auction_schedule.auctionType}
-                <br />
-                Auction Duration: {bond.auction_schedule.auctionDuration.days} days{" "}
-                {bond.auction_schedule.auctionDuration.hours} hours
-                <br />
-                Bond Status: {bond.bond_status}
-                <br />
-            </Typography>
-            <SwapComponent
-            sendTokenSymbol={"FRAX"}
-            sendTokenAddress={bond.bond_details.paymentTokenAddress}
-            receiveTokenSymbol={bond.bond_details.tokenSymbol}
-            receiveTokenAddress={bond.contract_address}
-            purchasePrice={bond.current_auction_price}
-            bond_status={bond.bond_status}
-            />
             <GoalProgress
-            description={bond.project_info.description}
-            totalAmount={bond.bond_details.totalAmount}
-            currentAmount={bond.total_supply}
-            totalValue={
-                bond.bond_details.totalAmount * bond.bond_details.tokenPrice
-            }
-            apr={bond.apr}
-            price={bond.current_auction_price}
-            balance={bond.remaining_tokens}
+                description={bond.project_info.description}
+                totalAmount={bond.bond_details.totalAmount}
+                currentAmount={bond.total_supply}
+                totalValue={
+                    bond.bond_details.totalAmount * bond.bond_details.tokenPrice
+                }
+                apr={bond.apr}
+                price={bond.current_auction_price}
+                balance={bond.remaining_tokens}
+                title = {bond.bond_details.title}
+                issuer={bond.project_info.name}
+                bondStatus={bond.bond_status}
+                startDate={bond.auction_schedule.startDate}
+                duration={bond.auction_schedule.auctionDuration.days}
+                bond={bond}
             />
-            <Button
-                variant="contained"
-                color="primary"
-                href={bond.project_info.website}
-                target="_blank"
-                sx={{ mt: 2 }}
-                >
-                View Project
-            </Button>
         </Box>
     )
 }

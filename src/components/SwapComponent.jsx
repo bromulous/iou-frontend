@@ -5,7 +5,7 @@ import backend from "../api";
 import { UserContext } from "../contexts/UserContext";
 import FRAX_icon from "../assets/FRAX_icon.webp";
 
-const SwapComponent = ({ sendTokenSymbol, receiveTokenSymbol, sendTokenAddress, receiveTokenAddress, purchasePrice, bond_status }) => {
+const SwapComponent = ({ sendTokenSymbol, receiveTokenSymbol, sendTokenAddress, receiveTokenAddress, purchasePrice, bond_status, bond }) => {
   const [sendAmount, setSendAmount] = useState('');
   const [receiveAmount, setReceiveAmount] = useState('');
   const [sendBalance, setSendBalance] = useState(0);
@@ -94,6 +94,9 @@ const SwapComponent = ({ sendTokenSymbol, receiveTokenSymbol, sendTokenAddress, 
   const isSwapDisabled = sendAmount > sendBalance || sendAmount <= 0 || receiveAmount <= 0 || bond_status !== 'Auction Live';
   const isApproveDisabled = sendAmount <= approvedAmount;
 
+  if(bond_status != "Auction Live") {
+    return null
+  }
   return (
     <Box p={3} boxShadow={2} borderRadius={4} width={300}>
       <Typography variant="h6">Token Swap</Typography>
@@ -129,7 +132,7 @@ const SwapComponent = ({ sendTokenSymbol, receiveTokenSymbol, sendTokenAddress, 
         InputProps={{
           endAdornment: (
             <Box display="flex" alignItems="center">
-              <img src="/path/to/receiveTokenIcon.png" alt={receiveTokenSymbol} width={24} height={24} />
+              <img src={bond.project_info.imageUrl} alt={receiveTokenSymbol} width={24} height={24} />
               <Typography variant="body2">{receiveTokenSymbol}</Typography>
             </Box>
           ),

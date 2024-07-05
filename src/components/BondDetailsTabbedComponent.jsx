@@ -109,7 +109,6 @@ const BondDetailsTabbedComponent = () => {
 const Tab1Content = ({ bond, bondId, currentUserId, handleSnapshotTaken, refetchData }) => (
   <Card variant="outlined">
     <CardContent>
-      <Typography variant="h6" gutterBottom>Bond</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <BondMainDetail bond={bond} bondId={bondId} currentUserId={currentUserId} handleSnapshotTaken={handleSnapshotTaken} />
