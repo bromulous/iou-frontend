@@ -54,8 +54,6 @@ const BondMainDetail = function({bond, bondId, currentUserId, handleSnapshotTake
             price={bond.current_auction_price}
             balance={bond.remaining_tokens}
             />
-            <SnapshotCard user_id={currentUserId} bond_id={bondId} current_block={bond.current_block} next_snapshot_block={bond.next_eligible_snapshot} onSnapshotTaken={handleSnapshotTaken} />
-            <UserSnapshotDetailsCard snapshot = {bond.amount_user_entitled_to_and_claimable} />
             <Button
                 variant="contained"
                 color="primary"
