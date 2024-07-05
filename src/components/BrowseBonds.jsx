@@ -52,7 +52,7 @@ const BrowseBonds = () => {
     });
 
   const sections = [
-    { title: "Active Auctions", bonds: filterBonds("Active") },
+    { title: "Active Auctions", bonds: filterBonds("Auction Live") },
     { title: "Upcoming Auctions", bonds: filterBonds("Pre-Auction") },
     { title: "New Bonds", bonds: bonds.slice(0, 5) }, // Assuming new bonds are the latest 5 bonds
     {
