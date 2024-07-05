@@ -5,6 +5,7 @@ import backend from "../api";
 import { UserContext } from "../contexts/UserContext";
 import SwapComponent from "./SwapComponent";
 import GoalProgress from "./GoalProgress";
+import SnapshotCard from "./SnapshotCard";
 
 const BondDetail = () => {
   const { bondId } = useParams();
@@ -14,24 +15,29 @@ const BondDetail = () => {
   const [error, setError] = useState(null);
   const { currentUserId } = useContext(UserContext);
 
-  useEffect(() => {
-    const fetchBondDetails = async () => {
-      console.log("Fetching bond details");
-      const body = {
-        user_id: currentUserId,
-      };
-      try {
-        const res = await backend.get(`/bond/${bondId}`, {
-          params: { user_id: currentUserId },
-        });
-        setBond(res.data);
-        setLoading(false);
-      } catch (err) {
-        setError(err);
-        setLoading(false);
-      }
-    };
+  const handleSnapshotTaken = () => {
     fetchBondDetails();
+  };
+
+  const fetchBondDetails = async () => {
+    console.log("Fetching bond details");
+    const body = {
+      user_id: currentUserId,
+    };
+    try {
+      const res = await backend.get(`/bond/${bondId}`, {
+        params: { user_id: currentUserId },
+      });
+      setBond(res.data);
+      setLoading(false);
+    } catch (err) {
+      setError(err);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+   fetchBondDetails();
   }, [bondId]);
 
   if (loading) {
@@ -112,6 +118,7 @@ const BondDetail = () => {
           price={bond.current_auction_price}
           balance={bond.remaining_tokens}
         />
+        <SnapshotCard user_id={currentUserId} bond_id={bondId} current_block={bond.current_block} next_snapshot_block={bond.next_eligible_snapshot} onSnapshotTaken={handleSnapshotTaken} />
         <Button
           variant="contained"
           color="primary"
